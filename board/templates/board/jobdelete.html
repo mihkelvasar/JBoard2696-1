@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content1 %}
+{% if user.is_authenticated %}
+Hello,  {{user.username}}!
+{%endif%}
+{% endblock %}
+
+
+{% if job_one %}
+{%block title %} {{job_one.j_title}} {% endblock %}
+
+{% block content %}
+
+
+    <p><h2> Job Title: {{job_one.j_title}}</h2></p>
+    <p><h3> Posted at: {{job_one.j_date}} </h3></p>
+    <p><h3> Posted by: {{job_one.j_poster}}</h3></p>
+    <p><h3> Contact info: {{job_one.email}}</h3></p> 
+
+    <p><h2> Job category: </h2></p>
+    <p><h4> {{job_one.j_category|linebreaks}} </h4></p>
+
+    <p><h2> Job description: </h2></p>
+    <p> {{job_one.j_description|linebreaks}} </p>
+    
+    <p><h2> Skill requirements: </h2></p>
+    <p> {{job_one.j_reqs|linebreaks}} </p>
+
+    <p><h2> About the Company: </h2></p>
+    <p> {{user.userprofile.company_descript|linebreaks}} </p>
+
+    
+    <form action="/board/jobdelete/{{job_one.j_id}}" method="POST">
+        {% csrf_token %}
+
+    <p> Are you sure you want to delete this job posting? </p>
+    <input type="submit" value="Yes, delete!"> 
+    </form> 
+    
+
+    {%comment%}
+    Add button and link to edit post instead.
+    Add option to unpublish and turn into draft instead.
+    
+    {%endcomment%}
+
+
+    <a href="/board/front/"> 
+        <button>Back</button> 
+    </a>

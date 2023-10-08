@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST" class="form-group">
+	{% csrf_token %}
+	<h2>Sign Up</h2>
+	{{ user_form.as_p }}
+	<input type="submit" value="Register" />
+</form>
+
+
+	
+<p> IMPORTANT! You need to fill both forms to register a new user </p>
+
+{% endblock content%}

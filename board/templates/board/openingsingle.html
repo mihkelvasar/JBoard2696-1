@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load board_extras %}
+
+{% if job_one %}
+    {% block title %} {{job_one.job_title}} {% endblock %}
+
+    {% block content1 %}
+    <p><h2> Job Title: {{job_one.job_title}}</h2></p>
+    <p><h3> Posted at: {{job_one.job_date}} </h3></p>
+    <p><h3> Posted by: {{job_one.job_source}}</h3></p>
+    <p><h3> Contact info: {{job_one.email}}</h3></p> 
+
+    <p><h2> Job category: </h2></p>
+    <p><h4> {{job_one.job_field|linebreaks}} </h4></p>
+
+    <p><h2> Job description: </h2></p>
+    <p> {{job_one.job_desc|linebreaks}} </p>
+    
+    <p><h2> Skill requirements: </h2></p>
+    <p> {{job_one.job_skills|linebreaks}} </p>
+
+    <p><h2> About the Company: </h2></p>
+    <p> {{job_one.job_about|linebreaks}} </p>
+    {% endblock %}
+
+
+
+    {% block content %}
+        {% if user.is_authenticated  %}
+            Hello,  {{user.username}}!
+            <p><a href="{% url 'board:logout' %}">
+            <button> Log out!</button> </a></p>
+            {% if request.user|has_group1:"Jobless" %}
+                <form action="/board/jobapply/{{job_one.job_id}}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Apply!"> 
+                </form>
+
+                <p><a href="{% url 'board:userhome' %}">
+                <button> Home!</button> </a></p>                
+            {% else %}
+                User group check failed!
+            {% endif %}
+
+        {% else %}
+            <p>You are not logged in! Login to continue</p>
+            <p><a href="{% url 'board:login' %}">
+            <button> Login!</button> </a></p>
+        {% endif %}   
+    {% endblock %}
+   
+
+{% else %}
+    <p>Job posting may have been deleted or unpublished.</p>
+{% endif %}
+{% block content2 %} 
+<p><a href="{% url 'board:front' %}">
+<button>Back</button></a></p>
+{% endblock %}

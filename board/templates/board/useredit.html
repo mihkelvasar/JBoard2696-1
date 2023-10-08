@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content1 %}
+
+
+{% if user.is_authenticated %}
+Hello,  {{user.username}}!
+{%endif%}
+
+
+{% if err %}
+<p> Account edit form errors: {{ err }} </p>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<h2> Edit your user profile </h2>
+<form method="POST" novalidate>
+    {%csrf_token%}
+    {{ account_form.as_p }}
+    {{ profile_form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+
+<p>Want to change account password instead? Here's a button</p>
+<p><a href="{% url 'board:password-change' %}">
+    <button>Change Password</button></a></p>
+
+<p><a href="{% url 'board:userhome' %}">
+    <button>Back</button>
+</a></p>
+
+{% endblock %}

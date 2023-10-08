@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+
+{% block title %} Job Board 1896: {{current_user.userprofile.company_name}}'s Desktop {% endblock %}
+
+    {%block content1 %}
+        <p><h2> Job Board 1896: {{current_user.userprofile.company_name}}'s Desktop </h2></p>
+
+        <p>Your Job posting pulls data from your User Profile, so it would be wise to complete that</p>
+        <p><a href="{% url 'board:seekeredit' %}">Edit Profile</a></p>
+    
+        <p><a href="{% url 'board:jobcreate' %}">Add Job Opening</a></p>
+
+        <p><a href="{% url 'board:logout' %}">Log Out!</a></p>
+
+        <p><a href="{% url 'board:front' %}">Front page</a></p>
+    
+    {% endblock %}
+
+    
+    {% block content %}
+    {% if seeker_job_list %}
+    
+    here is a list of job openings you have posted:
+    <ul>
+        {% for i in seeker_job_list %}
+            <li><p> {{i.job_title}} posted on {{i.job_date}} 
+            <a href="/board/seekeroneview/{{i.job_id}}"> See opening </a>  
+            This post is {%if i.published == True %}  published {% else %} unpublished {% endif %} </p> 
+            {%comment%}
+            {% if applications %}
+            The following users have applied to this opening:
+            <ul>
+                {% for k in applications %}
+                <li><p> {% if k.is_active == True and k.sourcejob == i.job_id %} User {{k.applicant}} on {{k.applydate}} applied - 
+                <a href="/board/seeapply/{{k.apply_id}}"> See application</a> {% else %} This application has been rescinded. {% endif %}</p></li>  
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {%endcomment%}
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p> You have not posted any job openings yet.</p>
+    {% endif %} 
+    {% endblock %}

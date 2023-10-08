@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+
+
+{% block title %} Job Board 1896: {{jobless.username}}'s Desktop {% endblock %}
+
+    
+    {% block content1 %}
+    <p><h2> Job Board 1896: {{jobless.username}}'s Desktop </h2></p>
+
+    <p>Your CV pulls data from your User Profile, so it would be wise to complete that</p>
+    <p><a href="{% url 'board:useredit' %}">Edit Profile</a></p>
+    
+    {%if seevee %}
+    <p><a href="/board/cvview">See CV</a></p>
+    <p><a href="/board/cvedit">Edit CV</a></p>
+    {% comment %}<p><a href="{% url 'board:exportcv' %}">Export CV as PDF</a></p>{% endcomment %}
+    {% else %}
+    <p><h3>{{message}}</h3></p>
+    <p><a href="{% url 'board:newcv' %}">New CV</a></p>
+    {% endif %}
+    {% endblock %}
+
+    {% block content3 %}
+    {% if apply_list %}
+    
+        You have applied for the following Job postings:
+        <ul>
+            {% for i in apply_list %}
+            <li> {%if i.is_active == True %} {{i.sourcejob.job_title}} at {{i.sourcejob.job_user.company_descript}}
+                 <a href="/board/seeapply/{{i.apply_id}}"> See application</a> {% else %}
+                 You have rescinded your application {% endif %} </li>
+            {%endfor%}
+        </ul>
+    {%endif%}
+    {% endblock %}
+
+
+
+
+    {% block content2 %}
+    <p><a href="{% url 'board:front' %}">See posted jobs</a></p>
+    
+    <p><a href="{% url 'board:logout' %}">Log Out!</a></p>
+    {% endblock %}
+
+
+    
+
+

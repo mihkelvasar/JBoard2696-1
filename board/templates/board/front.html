@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load board_extras %}
+
+
+{% block title %} Job Board 1896 - Front {% endblock %}
+
+    
+    {% block content1 %}
+    {% if user.is_authenticated %}
+        Hi  {{user.username}} !
+        {% if request.user|has_group2:"Seeker" %}
+        <p><a href="{% url 'board:seekerview' %}">Profile</a></p>
+        {% elif request.user|has_group1:"Jobless" %}
+        <p><a href="{% url 'board:userhome' %}">Profile</a></p>
+        {% endif %}
+        <p><a href="{% url 'board:logout' %}">Log Out!</a></p>
+
+    {% else %}
+        <p> You are not logged in!</p>
+        <p> To interact with listings, please log in! </p>
+
+
+        
+    {% endif %}
+    {% endblock %}
+
+    {% block content %}
+    {% if job_list %}
+    <ul>
+        {% for i in job_list %}
+            <li> {{i.job_title}} at {{i.job_source}} posted on {{i.job_date}} 
+                {%if request.user|has_group2:"Seeker" %} <a href="/board/seekeroneview/{{i.job_id}}"> See opening </a> {% else %} <a href="/board/front/{{i.job_id}}"> See opening </a> {% endif %} </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p> No job listings found.</p>
+    {% endif %} 
+    {% endblock %}
+
+    {%block content2 %}
+    {% if user.is_anonymous %}
+    <p> <a href="{% url 'board:login' %}">
+        <button>Log in!</button></a> 
+    </p>
+    
+    <p>
+    <a href="{% url 'board:register' %}">
+        <button>Register!</button>
+    </a>
+    </p>
+    {% endif %}
+    {% endblock %}

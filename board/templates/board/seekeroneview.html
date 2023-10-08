@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% if job_one %}
+    {%block title %} {{job_one.job_title}} {% endblock %}
+
+    {% block content1 %}
+
+    
+        {% if user.is_authenticated %}
+        Hello,  {{user.username}}!
+        {%endif%}
+
+
+    {%if job_one.published == False %} <p><h2> WARNING! This job posting is a draft! It is not visible on board/front </h2></p> {% endif %}
+
+        <p><h2> Job Title: {{job_one.job_title}}</h2></p>
+        <p><h3> Posted at: {{job_one.job_date}} </h3></p>
+        <p><h3> Posted by: {{job_one.job_source}}</h3></p>
+        
+
+        <p><h2> Job category: </h2></p>
+        <p><h4> {{job_one.job_field|linebreaks}} </h4></p>
+
+        <p><h2> Job description: </h2></p>
+        <p> {{job_one.job_desc|linebreaks}} </p>
+        
+        <p><h2> Skill requirements: </h2></p>
+        <p> {{job_one.job_skills|linebreaks}} </p>
+
+        <p><h2> About the Company: </h2></p>
+        <p> {{job_one.job_about|linebreaks}} </p>
+
+        {% if applications %}
+            The following users have applied to this opening:
+            <ul>
+                {% for i in applications %}
+                <li> {% if i.is_active == True %} User {{i.applicant}} on {{i.applydate}} 
+                <a href="/board/seeapply/{{i.apply_id}}"> See application</a> {% else %} This application has been rescinded. {% endif %}</li>  
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endblock %}
+
+        {% block content %}
+
+        {% if request.user == job_one.job_user %}
+        <form action="/board/jobedit/{{job_one.pk}}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Edit posting"> 
+        </form>
+
+        <form action="/board/jobdelete/{{job_one.pk}}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Delete posting"> 
+        </form>
+
+        {%if job_one.published == False %}
+            <form action="/board/jobpublish/{{job_one.pk}}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Publish posting"> 
+            </form>
+        {% else %}
+            <form action="/board/jobunpublish/{{job_one.pk}}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Unpublish posting"> 
+            </form>
+        {% endif %}
+        
+
+        {% endif %}
+
+        {% endblock %}
+{% else %}
+    Job posting has disappeared! That's an error, btw.
+{% endif %}
+{% block content2 %}
+{% if request.user == job_one.job_user %}
+    <p><a href="{% url 'board:seekerview' %}">
+        <button>Home</button>
+    </a></p>
+
+    <p><a href="{% url 'board:front' %}">
+        <button>Front</button>
+    </a></p>
+{% else %}
+    <a href="{% url 'board:front' %}">
+         <button>Back</button>
+    </a>
+{% endif %}
+{% endblock %}

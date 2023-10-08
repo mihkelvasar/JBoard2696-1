@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content1 %}
+{% if user.is_authenticated %}
+Hello,  {{user.username}}!
+{%endif%}
+{% endblock %}
+
+{%if seevee %}
+
+    {% block title %} {{seevee.cv_fname}} {{seevee.cv_lname}}'s CV.  {% endblock %}
+
+    {% block content %}
+    <p><h2> I Basic information</h2></p>
+    <p><h4> Given names: {{seevee.cv_fname}} </h4></p>
+    <p><h4> Last name: {{seevee.cv_lname}} </h4></p>
+    <p><h4> Date of birth: {{seevee.cv_dob}} </h4></p>
+    <p><h4> Email: {{seevee.cv_email}} </h4></p>
+
+    <p><h2> II Education</h2></p>
+    <p> {{seevee.cv_education|linebreaks}} </p>
+
+    <p><h2> III Job History</h2></p>
+    <p> {{seevee.cv_career|linebreaks}} </p>
+
+    <p><h2> IV Technical Skills</h2></p>
+    <p> {{seevee.cv_skills|linebreaks}} </p>
+
+    <p><h2> V About Me</h2></p>
+    <p> {{seevee.cv_other|linebreaks}} </p>
+
+    <p><h3>Last updated at: {{seevee.cv_date}}</h3></p> 
+
+
+    
+    <a href="{% url 'board:editcv' %}">
+         <button>Edit CV</button>
+    </a>
+    
+    <a href="{% url 'board:exportcv' %}">
+        <button> Export as PDF </button>
+    </a> 
+
+    {% endblock %}
+
+{% else %}
+
+    <p> You have not created a CV yet.</p>
+
+    <p><a href="{% url 'board:newcv' %}"> Would you like to create one?</a></p>
+
+{% endif %}
+
+{% block content2 %}
+    <a href="{% url 'board:userhome' %}">
+        <button>Back</button>
+    </a>
+
+{% endblock %}

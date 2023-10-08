@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content1 %}
+{% if user.is_authenticated %}
+Hello,  {{user.username}}!
+{%endif%}
+{% endblock %}
+
+{% block content %}
+
+<p><h2>{% if notseevee %} Edit {% else %} New {% endif %} CV </h2></p>
+
+
+<form method="POST" novalidate>
+    {%csrf_token%}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+
+<p><a href="{% url 'board:userhome' %}">
+    <button>Back</button>
+</a></p>
+
+{% endblock %}

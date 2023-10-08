@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load board_extras %}
+
+{%comment%}
+This view shows a cv side by side with a motivation Letter
+
+In the title or up high, it should show both cv date and apply date, one on either side, also job for which the application applies
+
+
+{%endcomment%}
+
+{% block content1 %}
+
+{% if observer.is_authenticated %}
+Hello,  {{observer.username}}!
+{%endif%}
+
+{% if seevee %}
+    <p><h3>Last updated at: {{seevee.cv_date}}</h3></p> 
+
+    <p><h2> I Basic information</h2></p>
+    <p><h4> Given names: {{seevee.cv_fname}} </h4></p>
+    <p><h4> Last name: {{seevee.cv_lname}} </h4></p>
+    <p><h4> Date of birth: {{seevee.cv_dob}} </h4></p>
+    <p><h4> Email: {{seevee.cv_email}} </h4></p>
+
+    <p><h2> II Education</h2></p>
+    <p> {{seevee.cv_education|linebreaks}} </p>
+
+    <p><h2> III Job History</h2></p>
+    <p> {{seevee.cv_career|linebreaks}} </p>
+
+    <p><h2> IV Technical Skills</h2></p>
+    <p> {{seevee.cv_skills|linebreaks}} </p>
+
+    <p><h2> V About Me</h2></p>
+    <p> {{seevee.cv_other|linebreaks}} </p>
+
+{% endif %}
+{% endblock %}
+
+{% block content3 %}
+{% if application %}
+    <p><h3>Motivation letter</h3></p>
+    <p> {{application.motivation|linebreaks}} </p>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block content2 %}
+{% if request.user|has_group1:"Jobless" %}
+<p><a href="{% url 'board:userhome' %}">
+    <button> Home!</button> </a></p> 
+
+<form action="/board/applycancel/{{application.apply_id}}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Rescind application"> 
+</form>
+
+{% elif request.user|has_group2:"Seeker" %}
+<p><a href="{% url 'board:seekerview' %}">
+    <button> Back</button> </a></p> 
+{% else %}
+Group check failed
+{% endif %}
+
+<p><a href="{% url 'board:exportcv' %}">
+    <button> Export as PDF </button></a></p> 
+
+<p><a href="{% url 'board:logout' %}">
+    <button>Log Out!</button></a></p>
+
+{% endblock %}
