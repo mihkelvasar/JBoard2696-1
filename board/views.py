@@ -15,7 +15,7 @@ from .functions import *
 #pw - samantha23
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the pollfuckers index.")
+    return HttpResponse("Hello, world. You're at the polls index.")
 # Create your views here.
 
 def front(request):
